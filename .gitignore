@@ -28,5 +28,4 @@ pnpm-debug.log*
 /public/cordova.js
 
 #firebase.js
-/src/datasources/firebase.js
-src/datasources/firebase.js
+firebase.js
