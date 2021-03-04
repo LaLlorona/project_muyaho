@@ -1,4 +1,4 @@
-# 무한도전 아세요? 무한~ 무야호!
+# ex12
 
 ## Project setup
 ```
@@ -17,4 +17,3 @@ npm run build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
-# project_muyaho

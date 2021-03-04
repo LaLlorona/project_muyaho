@@ -8,6 +8,7 @@ export default {
 		fnSetLoading(state, payload) {
 			state.bIsLoading = payload;
 		},
+
 		fnSetErrorMessage(state, payload) {
 			state.sErrorMessage = payload;
 		},
@@ -17,6 +18,7 @@ export default {
 		fnGetLoading(state) {
 			return state.bIsLoading;
 		},
+
 		fnGetErrorMessage(state) {
 			return state.sErrorMessage;
 		},

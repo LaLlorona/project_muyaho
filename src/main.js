@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import App from './App.vue';
-import router from '@/routes/index.js';
-import store from '@/store/index.js';
+import './registerServiceWorker';
+import router from './routes/index.js';
+import store from './store/index.js';
 import vuetify from './plugins/vuetify';
 
 import firebase from 'firebase/app';
@@ -15,12 +16,11 @@ new Vue({
 	vuetify,
 	created() {
 		firebase.auth().onAuthStateChanged(pUserInfo => {
-			if (pUserInfo) {
+			//it returns user, not crudential
+			if (pUserInfo != null) {
 				store.dispatch('fnDoLoginAuto', pUserInfo);
 			}
 		});
 	},
-	render: function(h) {
-		return h(App);
-	},
+	render: h => h(App),
 }).$mount('#app');

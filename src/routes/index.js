@@ -1,49 +1,41 @@
-/* eslint-disable no-undef */
 import Vue from 'vue';
 import Router from 'vue-router';
+
 import firebase from 'firebase/app';
-require('firebase/auth');
 
 Vue.use(Router);
 
 const router = new Router({
-	mode: 'history',
-	base: process.env.BASE_URL,
 	routes: [
 		{
 			path: '/',
-			redirect: '/main',
+			name: 'start_page',
+			component: () => import('@/views/start_page.vue'),
 		},
+
 		{
 			path: '/main',
 			name: 'main_page',
-			component: () => import('@/views/gallery'),
+			component: () => import('@/views/main_page.vue'),
+			meta: { bAuth: true },
 		},
+
 		{
 			path: '/login',
 			name: 'login_page',
-			component: () => import('@/views/login'),
+			component: () => import('@/views/login_page.vue'),
 		},
+
 		{
-			path: '/signup',
-			name: 'signup_page',
-			component: () => import('@/views/signup'),
+			path: '/register',
+			name: 'register_page',
+			component: () => import('@/views/register_page.vue'),
 		},
+
 		{
-			path: '/upload',
-			name: 'upload_page',
-			component: () => import('@/views/upload'),
-			meta: {
-				bAuth: true,
-			},
-		},
-		{
-			path: '/evaluate',
-			name: 'evaluate_page',
-			component: () => import('@/views/evaluate'),
-			meta: {
-				bAuth: true,
-			},
+			path: '/*',
+			name: 'error_page',
+			component: () => import('@/views/error_page.vue'),
 		},
 	],
 });
