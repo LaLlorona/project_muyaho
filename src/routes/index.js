@@ -9,15 +9,19 @@ const router = new Router({
 	routes: [
 		{
 			path: '/',
-			name: 'start_page',
-			component: () => import('@/views/start_page.vue'),
+			redirect: '/main',
 		},
 
 		{
 			path: '/main',
-			name: 'main_page',
+			name: 'main',
 			component: () => import('@/views/main_page.vue'),
-			meta: { bAuth: true },
+		},
+
+		{
+			path: '/post',
+			name: 'meme_post',
+			component: () => import('@/views/meme_post.vue'),
 		},
 
 		{
@@ -30,6 +34,12 @@ const router = new Router({
 			path: '/register',
 			name: 'register_page',
 			component: () => import('@/views/register_page.vue'),
+		},
+
+		{
+			path: '/info',
+			name: 'meme_info_page',
+			component: () => import('@/views/meme_info.vue'),
 		},
 
 		{
