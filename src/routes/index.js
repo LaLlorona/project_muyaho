@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import Dashboard from '@/views/Dashboard.vue';
 
-import firebase from 'firebase/app';
+import { auth } from '@/datasources/firebase.js';
 
 Vue.use(Router);
 
@@ -9,37 +10,44 @@ const router = new Router({
 	routes: [
 		{
 			path: '/',
-			redirect: '/main',
+			name: 'Dashboard',
+			component: Dashboard,
+			meta: {
+				requiredAuth: true,
+			},
 		},
 
 		{
 			path: '/main',
 			name: 'main',
-			component: () => import('@/views/main_page.vue'),
-		},
-
-		{
-			path: '/post',
-			name: 'meme_post',
-			component: () => import('@/views/meme_post.vue'),
+			component: () => import('@/views/main.vue'),
 		},
 
 		{
 			path: '/login',
-			name: 'login_page',
-			component: () => import('@/views/login_page.vue'),
+			name: 'login',
+			component: () => import('@/views/login.vue'),
 		},
 
 		{
-			path: '/register',
-			name: 'register_page',
-			component: () => import('@/views/register_page.vue'),
+			path: '/signup',
+			name: 'signup',
+			component: () => import('@/views/signup.vue'),
 		},
 
 		{
-			path: '/info',
-			name: 'meme_info_page',
-			component: () => import('@/views/meme_info.vue'),
+			path: '/settings',
+			name: 'settings',
+			component: () => import('@/views/Settings.vue'),
+			meta: {
+				requiredAuth: true,
+			},
+		},
+
+		{
+			path: '/post',
+			name: 'post',
+			component: () => import('@/views/post.vue'),
 		},
 
 		{
@@ -51,10 +59,10 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-	const bNeedAuth = to.matched.some(record => record.meta.bAuth);
-	const bCheckAuth = firebase.auth().currentUser;
-	if (bNeedAuth && !bCheckAuth) {
-		next('/login');
+	const requiresAuth = to.matched.some(x => x.meta.requiresAuth);
+
+	if (requiresAuth && !auth.currentUser) {
+		next('/Login');
 	} else {
 		next();
 	}

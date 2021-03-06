@@ -1,24 +1,27 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/firestore';
 
-import 'firebase/firebase-database';
-import 'firebase/storage';
+// firebase init - add your own config here
+const firebaseConfig = {};
+firebase.initializeApp(firebaseConfig);
 
-const oFirebase = firebase.initializeApp({
-	apiKey: 'AIzaSyBvVTLeforp5WJCoOZWRm5lmGrzwUl3-8g',
-	authDomain: 'project-muyaho.firebaseapp.com',
-	databaseURL: 'https://project-muyaho-default-rtdb.firebaseio.com',
-	projectId: 'project-muyaho',
-	storageBucket: 'project-muyaho.appspot.com',
-	messagingSenderId: '420349513798',
-	appId: '1:420349513798:web:4d6bc1104ec2d1e7903a47',
-	measurementId: 'G-3QND9NWCP9',
-});
+// utils
+const db = firebase.firestore();
+const auth = firebase.auth();
 
-const firebaseDatabase = oFirebase.database();
+// collection references
+const usersCollection = db.collection('users');
+const postsCollection = db.collection('posts');
+const commentsCollection = db.collection('comments');
+const likesCollection = db.collection('likes');
 
-export const firebaseMemesInfo = firebaseDatabase.ref('memes');
-
-export const firebaseImageStorage = oFirebase.storage();
-
-export const oFirebaseAuth = oFirebase.auth();
+// export utils/refs
+export {
+	db,
+	auth,
+	usersCollection,
+	postsCollection,
+	commentsCollection,
+	likesCollection,
+};
