@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Dashboard from '@/views/Dashboard.vue';
 
 import { auth } from '@/datasources/firebase.js';
 
@@ -10,11 +9,7 @@ const router = new Router({
 	routes: [
 		{
 			path: '/',
-			name: 'Dashboard',
-			component: Dashboard,
-			meta: {
-				requiredAuth: true,
-			},
+			redirect: '/main',
 		},
 
 		{
@@ -36,18 +31,12 @@ const router = new Router({
 		},
 
 		{
-			path: '/settings',
-			name: 'settings',
-			component: () => import('@/views/Settings.vue'),
-			meta: {
-				requiredAuth: true,
-			},
-		},
-
-		{
 			path: '/post',
 			name: 'post',
 			component: () => import('@/views/post.vue'),
+			meta: {
+				requiresAuth: true,
+			},
 		},
 
 		{
@@ -60,6 +49,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
 	const requiresAuth = to.matched.some(x => x.meta.requiresAuth);
+	console.log(auth.currentUser);
 
 	if (requiresAuth && !auth.currentUser) {
 		next('/Login');

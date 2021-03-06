@@ -14,6 +14,7 @@ export default new Vuex.Store({
 	],
 	state: {
 		userProfile: {},
+		isLoading: false,
 	},
 
 	actions: {
@@ -26,6 +27,13 @@ export default new Vuex.Store({
 
 			// fetch user profile and set in state
 			dispatch('fetchUserProfile', user);
+		},
+
+		async logout({ commit }) {
+			await fb.auth.signOut();
+
+			// clear userProfile and redirect to /login
+			commit('setUserProfile', {});
 		},
 
 		async signup({ dispatch }, form) {
@@ -56,18 +64,22 @@ export default new Vuex.Store({
 		},
 
 		async postMeme(context, data) {
-			const response = await fb.postsCollection.add({
-				createOn: new Date(),
-				name: data.name,
-				thumbnail: data.thumbnail,
-				explanation: data.explanation,
-				userId: fb.auth.currentUser.uid,
-				userName: this.state.userProfile.name,
-				comments: 0,
-				likes: 0,
-			});
-			router.push('/main');
-			return response;
+			fb.postsCollection
+				.add({
+					createOn: new Date(),
+					name: data.name,
+					thumbnail: data.thumbnail,
+					explanation: data.explanation,
+					userId: fb.auth.currentUser.uid,
+					userName: this.state.userProfile.name,
+					comments: 0,
+					likes: 0,
+				})
+				.then(response => {
+					console.log(response);
+					context.commit('setLoadingValue', false);
+					router.push('/main');
+				});
 		},
 
 		async fetchAllMemes() {
@@ -89,6 +101,9 @@ export default new Vuex.Store({
 	mutations: {
 		setUserProfile(state, data) {
 			state.userProfile = data;
+		},
+		setLoadingValue(state, data) {
+			state.isLoading = data;
 		},
 	},
 });

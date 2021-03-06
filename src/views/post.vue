@@ -11,6 +11,7 @@
 			</v-col>
 			<v-col cols="6">
 				<form @submit.prevent="fnDoPost">
+					<input type="file" @change="previewImage" accept="image/*" />
 					<v-text-field
 						name="name"
 						label="your meme's name"
@@ -18,21 +19,20 @@
 						v-model="name"
 						required
 					></v-text-field>
-					<v-text-field
-						name="thunbnail"
-						label="thumbnail"
-						type="text"
-						v-model="thumbnail"
-						required
-					></v-text-field>
-					<v-text-field
+
+					<v-textarea
 						name="explanation"
 						label="explanation"
 						type="test"
 						v-model="explanation"
 						required
-					></v-text-field>
+					></v-textarea>
 					<v-btn type="submit" color="orange" dark>post</v-btn>
+
+					<p v-if="isLoading">
+						Progress: {{ uploadValue.toFixed() + '%' }}
+						<progress id="progress" :value="uploadValue" max="100"></progress>
+					</p>
 				</form>
 			</v-col>
 			<v-col cols="3">
@@ -46,23 +46,54 @@
 </template>
 
 <script>
+import firebase from 'firebase';
 export default {
 	data() {
 		return {
 			name: '',
-			thumbnail: '',
+			uploadValue: 0,
+
 			explanation: '',
+			image: null,
 		};
 	},
+	computed: {
+		isLoading() {
+			return this.$store.state.isLoading;
+		},
+	},
 	methods: {
+		previewImage(event) {
+			console.log(event);
+			this.image = event.target.files[0];
+		},
 		async fnDoPost() {
-			const data = {
-				name: this.name,
-				thumbnail: this.thumbnail,
-				explanation: this.explanation,
-			};
-			let response = await this.$store.dispatch('postMeme', data);
-			console.log(response);
+			this.$store.commit('setLoadingValue', true);
+			const storageRef = firebase
+				.storage()
+				.ref(`${this.image.name}`)
+				.put(this.image);
+			storageRef.on(
+				`state_changed`,
+				snapshot => {
+					this.uploadValue =
+						(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+				},
+				error => {
+					console.log(error.message);
+				},
+				() => {
+					this.uploadValue = 100;
+					storageRef.snapshot.ref.getDownloadURL().then(url => {
+						let data = {
+							name: this.name,
+							thumbnail: url,
+							explanation: this.explanation,
+						};
+						this.$store.dispatch('postMeme', data);
+					});
+				},
+			);
 		},
 	},
 };
