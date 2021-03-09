@@ -22,12 +22,10 @@
 </template>
 
 <script>
+import Mixin from '@/mixins/Mixin.js';
 export default {
+	mixins: [Mixin],
 	computed: {
-		isLogin() {
-			return this.$store.state.userProfile.name;
-		},
-
 		isThisNotLoginPage() {
 			return this.$route.name != 'login';
 		},
@@ -35,8 +33,8 @@ export default {
 	methods: {
 		async logout() {
 			await this.$store.dispatch('logout');
-			console.log(this.$store.state.userProfile);
-			console.log(this.computed.isLogin());
+			// console.log(this.$store.state.userProfile);
+			// console.log(this.computed.isLogin());
 		},
 		goToPost() {
 			this.$router.push('/post');

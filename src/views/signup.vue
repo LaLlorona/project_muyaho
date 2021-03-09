@@ -9,22 +9,22 @@
 			<v-col class="text-center" cols="8" offset="2" sm="6" offset-sm="3">
 				<form @submit.prevent="fnRegisterUser">
 					<v-text-field
-						name="your name"
-						label="your name"
+						name="name"
+						label="닉네임"
 						type="text"
 						v-model="name"
 						required
 					></v-text-field>
 					<v-text-field
 						name="Email"
-						label="email!!!"
+						label="이메일"
 						type="email"
 						v-model="email"
 						required
 					></v-text-field>
 					<v-text-field
 						name="Password"
-						label="passwrod@!!"
+						label="비밀번호"
 						type="password"
 						v-model="password"
 						required
@@ -32,7 +32,7 @@
 
 					<v-text-field
 						name="ConfirmPassword"
-						label="password check"
+						label="비밀번호 확인"
 						type="password"
 						v-model="confirmPassword"
 						required
@@ -40,6 +40,9 @@
 					>
 					</v-text-field>
 					<v-btn type="submit" color="orange" dark>register</v-btn>
+					<v-alert type="error" dismissible v-model="alert">{{
+						getErrorMessage
+					}}</v-alert>
 				</form>
 			</v-col>
 		</v-row>
@@ -54,15 +57,20 @@ export default {
 			email: '',
 			password: '',
 			confirmPassword: '',
+			alert: false,
 		};
 	},
+
 	computed: {
 		fnComparePassword() {
-			if (this.sPassword == this.sConfirmPassword) {
+			if (this.password == this.confirmPassword) {
 				return true;
 			} else {
-				return 'password is not same. Please check it again.';
+				return '패스워드가 다릅니다.';
 			}
+		},
+		getErrorMessage() {
+			return this.$store.state.errorMessage;
 		},
 	},
 	methods: {
@@ -72,6 +80,16 @@ export default {
 				email: this.email,
 				password: this.password,
 			});
+		},
+	},
+	watch: {
+		getErrorMessage(pMsg) {
+			if (pMsg) this.alert = true;
+		},
+		alert(pValue) {
+			if (pValue == false) {
+				this.$store.commit('setErrorMessage', '');
+			}
 		},
 	},
 };

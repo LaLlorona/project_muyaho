@@ -23,9 +23,18 @@
 						required
 					></v-text-field>
 					<v-btn type="submit" color="orange" dark>login</v-btn>
+					<v-alert class="mt-3" type="error" dismissible v-model="alert">{{
+						getErrorMessage
+					}}</v-alert>
 				</form>
 			</v-col>
 		</v-row>
+		<br />
+		<div>
+			<p class="text-center">
+				<router-link to="/signup">계정이 없으세요?</router-link>
+			</p>
+		</div>
 	</v-container>
 </template>
 
@@ -35,7 +44,13 @@ export default {
 		return {
 			email: '',
 			password: '',
+			alert: false,
 		};
+	},
+	computed: {
+		getErrorMessage() {
+			return this.$store.state.errorMessage;
+		},
 	},
 	methods: {
 		fnDoLogin() {
@@ -43,6 +58,16 @@ export default {
 				email: this.email,
 				password: this.password,
 			});
+		},
+	},
+	watch: {
+		getErrorMessage(pMsg) {
+			if (pMsg) this.alert = true;
+		},
+		alert(pValue) {
+			if (pValue == false) {
+				this.$store.commit('setErrorMessage', '');
+			}
 		},
 	},
 };

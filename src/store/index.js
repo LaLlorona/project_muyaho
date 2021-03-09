@@ -14,19 +14,25 @@ export default new Vuex.Store({
 	],
 	state: {
 		userProfile: {},
+		currentMemes: [],
+		errorMessage: '',
 		isLoading: false,
 	},
 
 	actions: {
-		async login({ dispatch }, form) {
+		async login({ dispatch, commit }, form) {
 			// sign user in
-			const { user } = await fb.auth.signInWithEmailAndPassword(
-				form.email,
-				form.password,
-			);
+			try {
+				const { user } = await fb.auth.signInWithEmailAndPassword(
+					form.email,
+					form.password,
+				);
 
-			// fetch user profile and set in state
-			dispatch('fetchUserProfile', user);
+				// fetch user profile and set in state
+				dispatch('fetchUserProfile', user);
+			} catch (error) {
+				commit('setErrorMessage', error.message);
+			}
 		},
 
 		async logout({ commit }) {
@@ -36,20 +42,25 @@ export default new Vuex.Store({
 			commit('setUserProfile', {});
 		},
 
-		async signup({ dispatch }, form) {
+		async signup({ dispatch, commit }, form) {
 			// sign user up
-			const { user } = await fb.auth.createUserWithEmailAndPassword(
-				form.email,
-				form.password,
-			);
+			try {
+				const { user } = await fb.auth.createUserWithEmailAndPassword(
+					form.email,
+					form.password,
+				);
 
-			// create user profile object in userCollections
-			await fb.usersCollection.doc(user.uid).set({
-				name: form.name,
-			});
+				// create user profile object in userCollections
+				await fb.usersCollection.doc(user.uid).set({
+					name: form.name,
+					likedMemes: [],
+				});
 
-			// fetch user profile and set in state
-			dispatch('fetchUserProfile', user);
+				// fetch user profile and set in state
+				dispatch('fetchUserProfile', user);
+			} catch (error) {
+				commit('setErrorMessage', error.message);
+			}
 		},
 
 		async fetchUserProfile({ commit }, user) {
@@ -82,19 +93,54 @@ export default new Vuex.Store({
 				});
 		},
 
-		async fetchAllMemes() {
+		async fetchAllMemes(context) {
 			let memesOnPostsCollections = [];
 			await fb.postsCollection.get().then(querySnapshot => {
 				querySnapshot.forEach(doc => {
 					// doc.data() is never undefined for query doc snapshots
 					console.log(doc.id, ' => ', doc.data());
 					let dataWithId = doc.data();
-					dataWithId.id = doc.id;
+					dataWithId.postId = doc.id;
 					memesOnPostsCollections.push(dataWithId);
 				});
 			});
+			context.commit('setCurrentMemes', memesOnPostsCollections);
 
 			return memesOnPostsCollections;
+		},
+
+		async likeMeme(context, post) {
+			if (!fb.auth.currentUser) {
+				router.push('/login');
+				return;
+			}
+			const userId = fb.auth.currentUser.uid;
+
+			const postId = post.postId;
+
+			let userProfile = context.state.userProfile;
+			console.log('userProfile is ');
+			console.log(userProfile);
+
+			if (userProfile.likedMemes.includes(postId)) {
+				return;
+			} else {
+				try {
+					await fb.postsCollection.doc(postId).update({
+						likes: post.numLikes + 1,
+					});
+					let toUpdate = userProfile.likedMemes;
+					console.log('to Update is ');
+					console.log(toUpdate);
+					toUpdate.push(postId);
+					await fb.usersCollection.doc(userId).update({
+						likedMemes: toUpdate,
+					});
+					context.commit('updateLikeInfo', postId);
+				} catch (error) {
+					console.log(error);
+				}
+			}
 		},
 	},
 
@@ -104,6 +150,19 @@ export default new Vuex.Store({
 		},
 		setLoadingValue(state, data) {
 			state.isLoading = data;
+		},
+		setCurrentMemes(state, data) {
+			state.currentMemes = data;
+		},
+		setErrorMessage(state, data) {
+			state.errorMessage = data;
+		},
+		updateLikeInfo(state, postId) {
+			for (let i = 0; i < state.currentMemes.length; i++) {
+				if (state.currentMemes[i].postId == postId) {
+					state.currentMemes[i].likes++;
+				}
+			}
 		},
 	},
 });
