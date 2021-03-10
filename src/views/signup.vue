@@ -28,6 +28,7 @@
 						type="password"
 						v-model="password"
 						required
+						:rules="passwordRules"
 					></v-text-field>
 
 					<v-text-field
@@ -35,8 +36,8 @@
 						label="비밀번호 확인"
 						type="password"
 						v-model="confirmPassword"
+						:rules="confirmPasswordRules"
 						required
-						:rules="[fnComparePassword]"
 					>
 					</v-text-field>
 					<v-btn type="submit" color="orange" dark>register</v-btn>
@@ -57,6 +58,16 @@ export default {
 			email: '',
 			password: '',
 			confirmPassword: '',
+			passwordRules: [
+				value => !!value || '비밀번호를 입력해주세요',
+				value =>
+					(value && value.length >= 6) ||
+					'비밀번호는 최소 6글자 이상으로 해주세요',
+			],
+			confirmPasswordRules: [
+				value => !!value || '확인비밀번호를 입력해주세요',
+				value => value === this.password || '비밀번호가 일치하지 않습니다',
+			],
 			alert: false,
 		};
 	},

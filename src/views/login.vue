@@ -47,6 +47,7 @@ export default {
 			alert: false,
 		};
 	},
+
 	computed: {
 		getErrorMessage() {
 			return this.$store.state.errorMessage;

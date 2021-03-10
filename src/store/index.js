@@ -136,10 +136,45 @@ export default new Vuex.Store({
 					await fb.usersCollection.doc(userId).update({
 						likedMemes: toUpdate,
 					});
-					context.commit('updateLikeInfo', postId);
+					const updateInfo = {
+						postId: postId,
+						choice: 'increase',
+					};
+					context.commit('updateLikeInfo', updateInfo);
 				} catch (error) {
 					console.log(error);
 				}
+			}
+		},
+
+		async unlikeMeme(context, post) {
+			const userId = fb.auth.currentUser.uid;
+			const postId = post.postId;
+			let currentLikedMemes = context.state.userProfile.likedMemes;
+			try {
+				await fb.postsCollection.doc(postId).update({
+					likes: post.numLikes - 1,
+				});
+				let index = currentLikedMemes.indexOf(postId);
+				console.log('before removing memes');
+				console.log(currentLikedMemes);
+				console.log(index);
+				if (index > -1) {
+					currentLikedMemes.splice(index, 1);
+					console.log('after removing memes');
+					console.log(currentLikedMemes);
+
+					await fb.usersCollection.doc(userId).update({
+						likedMemes: currentLikedMemes,
+					});
+					const updateInfo = {
+						postId: postId,
+						choice: 'decrease',
+					};
+					context.commit('updateLikeInfo', updateInfo);
+				}
+			} catch (error) {
+				console.log(error);
 			}
 		},
 	},
@@ -157,10 +192,14 @@ export default new Vuex.Store({
 		setErrorMessage(state, data) {
 			state.errorMessage = data;
 		},
-		updateLikeInfo(state, postId) {
+		updateLikeInfo(state, updateInfo) {
 			for (let i = 0; i < state.currentMemes.length; i++) {
-				if (state.currentMemes[i].postId == postId) {
-					state.currentMemes[i].likes++;
+				if (state.currentMemes[i].postId == updateInfo.postId) {
+					if (updateInfo.choice == 'increase') {
+						state.currentMemes[i].likes++;
+					} else {
+						state.currentMemes[i].likes--;
+					}
 				}
 			}
 		},
