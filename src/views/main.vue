@@ -168,8 +168,7 @@
 										</div>
 										<v-card
 											class="mx-auto"
-											color="secondary"
-											dark
+											color="third"
 											v-else
 											v-for="comment in currentPostComments"
 											:key="comment.id"
@@ -183,12 +182,16 @@
 															src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
 														></v-img>
 													</v-list-item-avatar>
-
 													<v-list-item-content>
-														<v-list-item-title>{{
+														<v-list-item-title class="subtitle-1">{{
 															comment.userName
 														}}</v-list-item-title>
 													</v-list-item-content>
+													<v-row align="center" justify="end">
+														<span class="subtitle-2">{{
+															comment.createOn | formatDate
+														}}</span>
+													</v-row>
 												</v-list-item>
 											</v-card-title>
 
@@ -287,7 +290,7 @@ export default {
 			let currentComments = [];
 			const docs = await commentsCollection
 				.where('postId', '==', postId)
-				.orderBy('createOn')
+				// .orderBy('createOn')
 				.get();
 			docs.forEach(doc => {
 				let comment = doc.data();
