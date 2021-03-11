@@ -219,7 +219,8 @@ import {
 	commentsCollection,
 	postsCollection,
 	auth,
-} from '@/datasources/firebase';
+} from '@/datasources/firebase.js';
+import router from '@/routes/index.js';
 export default {
 	data() {
 		return {
@@ -251,6 +252,10 @@ export default {
 			this.$store.dispatch('unlikeMeme', { postId, numLikes });
 		},
 		updateDialog(postId, action) {
+			if (!auth.currentUser) {
+				router.push('/login');
+				return;
+			}
 			console.log(`post id is ${postId}`);
 			if (action == 'close') {
 				this.$set(this.dialog, postId, false);
