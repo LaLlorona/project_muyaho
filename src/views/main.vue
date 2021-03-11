@@ -310,6 +310,7 @@ export default {
 
 	async created() {
 		await this.$store.dispatch('fetchAllMemes');
+		await this.$store.dispatch('fetchAllComments');
 		this.memes = this.$store.state.currentMemes;
 	},
 };
