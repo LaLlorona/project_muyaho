@@ -49,9 +49,6 @@ export default {
 		bus.$on('start:search', this.search);
 		await this.$store.dispatch('fetchAllMemes');
 		this.memes = this.$store.state.currentMemes;
-		console.log('process env is');
-		// eslint-disable-next-line no-undef
-		console.log(process.env.VUE_APP_ALGOLIA_KEY);
 	},
 
 	beforeDestroy() {

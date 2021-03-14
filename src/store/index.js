@@ -76,23 +76,6 @@ export default new Vuex.Store({
 
 		async postMeme(context, data) {
 			let postId = 'id' + new Date().getTime();
-			console.log(postId);
-			// fb.postsCollection
-			// 	.add({
-			// 		createOn: new Date(),
-			// 		name: data.name,
-			// 		thumbnail: data.thumbnail,
-			// 		explanation: data.explanation,
-			// 		userId: fb.auth.currentUser.uid,
-			// 		userName: this.state.userProfile.name,
-			// 		comments: 0,
-			// 		likes: 0,
-			// 	})
-			// 	.then(response => {
-			// 		console.log(response);
-			// 		context.commit('setLoadingValue', false);
-			// 		router.push('/main');
-			// 	});
 
 			fb.postsCollection
 				.doc(postId)
@@ -119,31 +102,12 @@ export default new Vuex.Store({
 			await fb.postsCollection.get().then(querySnapshot => {
 				querySnapshot.forEach(doc => {
 					// doc.data() is never undefined for query doc snapshots
-					console.log(doc.id, ' => ', doc.data());
+
 					let dataWithId = doc.data();
 					dataWithId.postId = doc.id;
 					memesOnPostsCollections.push(dataWithId);
 				});
 			});
-			context.commit('setCurrentMemes', memesOnPostsCollections);
-
-			return memesOnPostsCollections;
-		},
-
-		async fetchMemesWithWord(context, searchWord) {
-			let memesOnPostsCollections = [];
-			await fb.postsCollection
-				.where('name', 'array-contains-any', [searchWord])
-				.get()
-				.then(querySnapshot => {
-					querySnapshot.forEach(doc => {
-						// doc.data() is never undefined for query doc snapshots
-						console.log(doc.id, ' => ', doc.data());
-						let dataWithId = doc.data();
-						dataWithId.postId = doc.id;
-						memesOnPostsCollections.push(dataWithId);
-					});
-				});
 			context.commit('setCurrentMemes', memesOnPostsCollections);
 
 			return memesOnPostsCollections;
@@ -159,8 +123,6 @@ export default new Vuex.Store({
 			const postId = post.postId;
 
 			let userProfile = context.state.userProfile;
-			console.log('userProfile is ');
-			console.log(userProfile);
 
 			if (userProfile.likedMemes.includes(postId)) {
 				return;
@@ -170,8 +132,7 @@ export default new Vuex.Store({
 						likes: post.numLikes + 1,
 					});
 					let toUpdate = userProfile.likedMemes;
-					console.log('to Update is ');
-					console.log(toUpdate);
+
 					toUpdate.push(postId);
 					await fb.usersCollection.doc(userId).update({
 						likedMemes: toUpdate,
@@ -196,13 +157,9 @@ export default new Vuex.Store({
 					likes: post.numLikes - 1,
 				});
 				let index = currentLikedMemes.indexOf(postId);
-				console.log('before removing memes');
-				console.log(currentLikedMemes);
-				console.log(index);
+
 				if (index > -1) {
 					currentLikedMemes.splice(index, 1);
-					console.log('after removing memes');
-					console.log(currentLikedMemes);
 
 					await fb.usersCollection.doc(userId).update({
 						likedMemes: currentLikedMemes,

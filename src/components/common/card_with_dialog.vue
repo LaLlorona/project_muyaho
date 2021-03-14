@@ -236,7 +236,6 @@ export default {
 	},
 	methods: {
 		async likeMeme(postId, numLikes) {
-			console.log('like it');
 			await this.$store.dispatch('likeMeme', { postId, numLikes });
 			this.$emit('update');
 		},
@@ -250,7 +249,7 @@ export default {
 				router.push('/login');
 				return;
 			}
-			console.log(`post id is ${postId}`);
+
 			if (action == 'close') {
 				this.$set(this.dialog, postId, false);
 			} else {
@@ -295,7 +294,6 @@ export default {
 				let comment = doc.data();
 				comment.id = doc.id;
 				currentComments.push(comment);
-				console.log(comment);
 			});
 			this.currentPostComments = currentComments;
 			this.isLoading = false;
