@@ -44,7 +44,12 @@
 									class="material-icons tryToLike"
 									v-bind="attrs"
 									v-on="on"
-									@click.stop="updateDialog(item.postId + '_comment', 'open')"
+									@click.stop="
+										checkUserAuthAndUpdateDialog(
+											item.postId + '_comment',
+											'open',
+										)
+									"
 								>
 									comment
 								</span>
@@ -245,20 +250,22 @@ export default {
 			this.$emit('update');
 		},
 		updateDialog(postId, action) {
-			if (!auth.currentUser) {
-				router.push('/login');
-				return;
-			}
-
 			if (action == 'close') {
 				this.$set(this.dialog, postId, false);
 			} else {
 				this.$set(this.dialog, postId, true);
 			}
 		},
+		checkUserAuthAndUpdateDialog(postId, action) {
+			if (!auth.currentUser) {
+				router.push('/login');
+				return;
+			}
+			this.updateDialog(postId, action);
+		},
 
 		async updateDialogAndGetComment(postId) {
-			this.updateDialog(postId + '_info');
+			this.updateDialog(postId + '_info', true);
 			this.retrievecomments(postId);
 		},
 
