@@ -40,6 +40,17 @@ const router = new Router({
 		},
 
 		{
+			path: '/fame',
+			name: 'fame',
+			component: () => import('@/views/hall_of_fame.vue'),
+		},
+		{
+			path: '/test',
+			name: 'test',
+			component: () => import('@/views/test.vue'),
+		},
+
+		{
 			path: '/*',
 			name: 'error_page',
 			component: () => import('@/views/error_page.vue'),

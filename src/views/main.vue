@@ -9,7 +9,7 @@
 				v-for="meme in getMemes"
 				:key="meme.id"
 			>
-				<card_with_dialog :item="meme"></card_with_dialog>
+				<card_with_dialog :item="meme" @update="updateMemes"></card_with_dialog>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -17,11 +17,16 @@
 
 <script>
 import card_with_dialog from '@/components/common/card_with_dialog';
+import searchMixin from '@/mixins/searchMixin.js';
+import bus from '@/utils/bus';
 
 export default {
 	data() {
-		return {};
+		return {
+			memes: [],
+		};
 	},
+	mixins: [searchMixin],
 	components: {
 		card_with_dialog,
 	},
@@ -31,10 +36,26 @@ export default {
 			return this.$store.state.currentMemes;
 		},
 	},
-	methods: {},
+	methods: {
+		updateMemes() {
+			this.memes = this.$store.state.currentMemes;
+		},
+		search(searchWord) {
+			this.searchOnAlgolia(searchWord);
+		},
+	},
 
 	async created() {
+		bus.$on('start:search', this.search);
 		await this.$store.dispatch('fetchAllMemes');
+		this.memes = this.$store.state.currentMemes;
+		console.log('process env is');
+		// eslint-disable-next-line no-undef
+		console.log(process.env.VUE_APP_ALGOLIA_KEY);
+	},
+
+	beforeDestroy() {
+		bus.$off('start:search', this.search);
 	},
 };
 </script>

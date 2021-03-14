@@ -14,9 +14,13 @@
 					<input type="file" @change="previewImage" accept="image/*" />
 					<v-text-field
 						name="name"
-						label="your meme's name"
+						label="name"
 						type="text"
 						v-model="name"
+						:rules="[
+							v => (v || '').length < 100 || `제목은 100자 미만이어야 합니다.`,
+						]"
+						maxLength="100"
 						required
 					></v-text-field>
 
@@ -25,6 +29,10 @@
 						label="explanation"
 						type="test"
 						v-model="explanation"
+						:rules="[
+							v => (v || '').length < 300 || '설명은 300자 미만이어야 합니다.',
+						]"
+						maxlength="300"
 						required
 					></v-textarea>
 					<v-btn type="submit" color="orange" dark>post</v-btn>
@@ -52,7 +60,7 @@ export default {
 		return {
 			name: '',
 			uploadValue: 0,
-
+			test: 300,
 			explanation: '',
 			image: null,
 		};

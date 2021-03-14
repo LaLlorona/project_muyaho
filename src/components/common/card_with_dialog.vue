@@ -87,6 +87,12 @@
 													v-model="comment"
 													clearable
 													clear-icon="mdi-close-circle"
+													:rules="[
+														v =>
+															(v || '').length < 200 ||
+															'댓글은 200자 미만이어야 합니다.',
+													]"
+													maxlength="200"
 													required
 												></v-textarea>
 											</v-col>
@@ -232,10 +238,12 @@ export default {
 		async likeMeme(postId, numLikes) {
 			console.log('like it');
 			await this.$store.dispatch('likeMeme', { postId, numLikes });
+			this.$emit('update');
 		},
 
 		async unlikeMeme(postId, numLikes) {
 			await this.$store.dispatch('unlikeMeme', { postId, numLikes });
+			this.$emit('update');
 		},
 		updateDialog(postId, action) {
 			if (!auth.currentUser) {

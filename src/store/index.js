@@ -75,8 +75,28 @@ export default new Vuex.Store({
 		},
 
 		async postMeme(context, data) {
+			let postId = 'id' + new Date().getTime();
+			console.log(postId);
+			// fb.postsCollection
+			// 	.add({
+			// 		createOn: new Date(),
+			// 		name: data.name,
+			// 		thumbnail: data.thumbnail,
+			// 		explanation: data.explanation,
+			// 		userId: fb.auth.currentUser.uid,
+			// 		userName: this.state.userProfile.name,
+			// 		comments: 0,
+			// 		likes: 0,
+			// 	})
+			// 	.then(response => {
+			// 		console.log(response);
+			// 		context.commit('setLoadingValue', false);
+			// 		router.push('/main');
+			// 	});
+
 			fb.postsCollection
-				.add({
+				.doc(postId)
+				.set({
 					createOn: new Date(),
 					name: data.name,
 					thumbnail: data.thumbnail,
@@ -85,6 +105,7 @@ export default new Vuex.Store({
 					userName: this.state.userProfile.name,
 					comments: 0,
 					likes: 0,
+					postId: postId,
 				})
 				.then(response => {
 					console.log(response);
@@ -104,6 +125,25 @@ export default new Vuex.Store({
 					memesOnPostsCollections.push(dataWithId);
 				});
 			});
+			context.commit('setCurrentMemes', memesOnPostsCollections);
+
+			return memesOnPostsCollections;
+		},
+
+		async fetchMemesWithWord(context, searchWord) {
+			let memesOnPostsCollections = [];
+			await fb.postsCollection
+				.where('name', 'array-contains-any', [searchWord])
+				.get()
+				.then(querySnapshot => {
+					querySnapshot.forEach(doc => {
+						// doc.data() is never undefined for query doc snapshots
+						console.log(doc.id, ' => ', doc.data());
+						let dataWithId = doc.data();
+						dataWithId.postId = doc.id;
+						memesOnPostsCollections.push(dataWithId);
+					});
+				});
 			context.commit('setCurrentMemes', memesOnPostsCollections);
 
 			return memesOnPostsCollections;
