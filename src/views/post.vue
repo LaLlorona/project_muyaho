@@ -11,7 +11,7 @@
 			</v-col>
 			<v-col cols="6">
 				<form @submit.prevent="fnDoPost">
-					<input type="file" @change="previewImage" accept="image/*" />
+					<input type="file" @change="previewImage" accept="image/*" required />
 					<v-text-field
 						name="name"
 						label="name"
@@ -35,6 +35,18 @@
 						maxlength="300"
 						required
 					></v-textarea>
+					<v-select
+						v-model="year"
+						:items="allYears"
+						:rules="[v => !!v || '연도를 선택해주세요.']"
+						item-text="state"
+						item-value="abbr"
+						label="밈 등장 시기"
+						persistent-hint
+						return-object
+						single-line
+					></v-select>
+
 					<v-btn type="submit" color="orange" dark>post</v-btn>
 
 					<p v-if="isLoading">
@@ -55,6 +67,7 @@
 
 <script>
 import firebase from 'firebase';
+
 export default {
 	data() {
 		return {
@@ -63,11 +76,20 @@ export default {
 			test: 300,
 			explanation: '',
 			image: null,
+			year: 0,
 		};
 	},
+
 	computed: {
 		isLoading() {
 			return this.$store.state.isLoading;
+		},
+		allYears() {
+			const year = new Date().getFullYear();
+			return Array.from(
+				{ length: year - 2000 },
+				(value, index) => year - index,
+			);
 		},
 	},
 	methods: {

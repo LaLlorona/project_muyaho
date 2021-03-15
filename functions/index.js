@@ -14,8 +14,8 @@ const functions = require("firebase-functions");
 const algoliasearch = require("algoliasearch");
 
 
-const client = algoliasearch(process.env.VUE_APP_ALGOLIA_USE
-    , process.env.VUE_APP_ALGOLIA_KEY);
+const client = algoliasearch("X3LM926NK1"
+    , "6e9ae7d0040979bf816c25e2cf5721c7");
 const index = client.initIndex("firebase_query");
 
 exports.onPostCreated = functions.firestore.document("posts/{noteId}")

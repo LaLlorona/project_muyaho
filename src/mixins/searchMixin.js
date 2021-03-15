@@ -16,20 +16,18 @@ export default {
 			let client = algoliasearch(secret.ALGOLIA_USER, secret.ALGOLIA_KEY);
 			let index = client.initIndex('firebase_query');
 			index.search(searchWord).then(response => {
-				console.log(response);
-				let hitNames = [];
+				let hitId = [];
 				let responseLength = Math.min(response.hits.length, 10);
 				for (let i = 0; i < responseLength; i++) {
-					hitNames.push(response.hits[i].name);
+					hitId.push(response.hits[i].postId);
 				}
 				let updatedMemes = [];
 
 				fb.postsCollection
-					.where('name', 'in', hitNames)
+					.where('postId', 'in', hitId)
 					.get()
 					.then(querySnapshot => {
 						querySnapshot.forEach(doc => {
-							console.log(`doc name is ${doc.data().name}`);
 							updatedMemes.push(doc.data());
 						});
 						store.commit('setCurrentMemes', updatedMemes);

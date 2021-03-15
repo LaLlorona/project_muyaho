@@ -13,7 +13,12 @@
 				@click.stop="updateDialogAndGetComment(item.postId, 'open')"
 			>
 				<v-img height="250" :src="item.thumbnail"></v-img>
-				<v-card-title>{{ item.name }}</v-card-title>
+				<v-card-title
+					>{{ item.name }}
+					<v-row align="center" justify="end">
+						<span class="body-2 mr-2">by {{ item.userName }}</span>
+					</v-row>
+				</v-card-title>
 
 				<v-card-text>
 					<div class="my-1 subtitle-1">
@@ -154,13 +159,13 @@
 				>
 					<!-- <v-row no-gutters class="top-row"> -->
 					<v-row no-gutters class="top-row flex-grow-1 flex-shrink-1">
-						<v-col cols="9" class="grid-item-blue fill-parent-height">
+						<v-col cols="8" class="grid-item-blue fill-parent-height">
 							<v-img
 								:src="item.thumbnail"
 								style="width:100%; height:100%; "
 							></v-img>
 						</v-col>
-						<v-col cols="3" class="grid-item-green fill-parent-height">
+						<v-col cols="4" class="grid-item-green fill-parent-height">
 							<div v-if="isLoading">
 								<v-progress-circular
 									indeterminate
