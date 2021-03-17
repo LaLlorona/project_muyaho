@@ -2,7 +2,7 @@
 	<v-container flow>
 		<v-row>
 			<v-col cols="12" class="text-center my-5">
-				<h1 class="display-1">register page!</h1>
+				<h1 class="display-1" style="color:#EF476F">MUYAHO 아이디 생성</h1>
 			</v-col>
 		</v-row>
 		<v-row>
@@ -40,11 +40,14 @@
 						required
 					>
 					</v-text-field>
-					<v-btn type="submit" color="orange" dark>register</v-btn>
+					<v-btn type="submit" color="orange" dark>가입하기</v-btn>
 					<v-alert type="error" dismissible v-model="alert">{{
 						getErrorMessage
 					}}</v-alert>
 				</form>
+			</v-col>
+			<v-col cols="2" md="3">
+				<v-img src="../assets/6.gif"></v-img>
 			</v-col>
 		</v-row>
 	</v-container>

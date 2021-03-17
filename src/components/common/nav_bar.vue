@@ -29,6 +29,10 @@
 			<v-icon left>mdi-trophy</v-icon>명예의 전당
 		</v-btn>
 
+		<v-btn text @click.stop="goToPost" color="secondary">
+			<v-icon left>mdi-file-document-edit-outline</v-icon>포스트
+		</v-btn>
+
 		<v-btn text @click.stop="logout" v-if="isLogin" color="secondary">
 			<v-icon left>mdi-logout</v-icon>로그아웃</v-btn
 		>
@@ -40,9 +44,6 @@
 		>
 			<v-icon left>mdi-login</v-icon>
 			로그인
-		</v-btn>
-		<v-btn text @click.stop="goToPost" color="secondary">
-			<v-icon left>mdi-file-document-edit-outline</v-icon>포스트
 		</v-btn>
 	</v-app-bar>
 </template>
