@@ -45,7 +45,11 @@
 						persistent-hint
 						return-object
 						single-line
-					></v-select>
+					>
+					</v-select>
+					<v-alert type="error" dismissible v-model="alert">{{
+						errorMessage
+					}}</v-alert>
 
 					<v-btn type="submit" color="orange" dark>post</v-btn>
 
@@ -77,6 +81,8 @@ export default {
 			explanation: '',
 			image: null,
 			year: 0,
+			errorMessage: '',
+			alert: false,
 		};
 	},
 
@@ -97,33 +103,49 @@ export default {
 			console.log(event);
 			this.image = event.target.files[0];
 		},
+		assertInput() {
+			if (this.year == 0) {
+				return false;
+			}
+			return true;
+		},
 		async fnDoPost() {
-			this.$store.commit('setLoadingValue', true);
-			const storageRef = firebase
-				.storage()
-				.ref(`${this.image.name}`)
-				.put(this.image);
-			storageRef.on(
-				`state_changed`,
-				snapshot => {
-					this.uploadValue =
-						(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-				},
-				error => {
-					console.log(error.message);
-				},
-				() => {
-					this.uploadValue = 100;
-					storageRef.snapshot.ref.getDownloadURL().then(url => {
-						let data = {
-							name: this.name,
-							thumbnail: url,
-							explanation: this.explanation,
-						};
-						this.$store.dispatch('postMeme', data);
-					});
-				},
-			);
+			if (this.assertInput()) {
+				this.$store.commit('setLoadingValue', true);
+				const storageRef = firebase
+					.storage()
+					.ref(`${this.image.name}`)
+					.put(this.image);
+				storageRef.on(
+					`state_changed`,
+					snapshot => {
+						this.uploadValue =
+							(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+					},
+					error => {
+						console.log(error.message);
+					},
+					() => {
+						this.uploadValue = 100;
+						storageRef.snapshot.ref.getDownloadURL().then(url => {
+							let data = {
+								name: this.name,
+								thumbnail: url,
+								explanation: this.explanation,
+								year: this.year,
+							};
+							this.$store.dispatch('postMeme', data);
+						});
+					},
+				);
+			} else {
+				this.errorMessage = '모든 빈칸을 완성시켜주세요.';
+				this.alert = true;
+				setTimeout(() => {
+					this.errorMessage = '';
+					this.alert = false;
+				}, 2000);
+			}
 		},
 	},
 };

@@ -246,13 +246,13 @@ export default {
 	},
 	methods: {
 		async likeMeme(postId, numLikes) {
-			await this.$store.dispatch('likeMeme', { postId, numLikes });
-			this.$emit('update');
+			// await this.$store.dispatch('likeMeme', { postId, numLikes });
+			this.$emit('likeMeme', { postId, numLikes });
 		},
 
 		async unlikeMeme(postId, numLikes) {
-			await this.$store.dispatch('unlikeMeme', { postId, numLikes });
-			this.$emit('update');
+			// await this.$store.dispatch('unlikeMeme', { postId, numLikes });
+			this.$emit('unlikeMeme', { postId, numLikes });
 		},
 		updateDialog(postId, action) {
 			if (action == 'close') {
@@ -299,8 +299,9 @@ export default {
 			this.isLoading = true;
 			let currentComments = [];
 			const docs = await commentsCollection
+				.orderBy('createOn', 'desc')
 				.where('postId', '==', postId)
-				// .orderBy('createOn')
+
 				.get();
 			docs.forEach(doc => {
 				let comment = doc.data();
@@ -310,11 +311,6 @@ export default {
 			this.currentPostComments = currentComments;
 			this.isLoading = false;
 		},
-	},
-
-	async created() {
-		await this.$store.dispatch('fetchAllMemes');
-		this.memes = this.$store.state.currentMemes;
 	},
 };
 </script>

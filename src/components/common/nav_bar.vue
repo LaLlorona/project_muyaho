@@ -8,15 +8,26 @@
 
 		<v-spacer></v-spacer>
 
-		<v-btn text @click.stop="search">
-			<v-icon>mdi-magnify</v-icon>
+		<v-btn
+			v-if="this.$route.name == 'main'"
+			color="secondary"
+			text
+			@click.stop="search"
+		>
+			<v-icon left>mdi-magnify</v-icon>
 		</v-btn>
 
 		<v-text-field
+			v-if="this.$route.name == 'main'"
 			class="shrink"
+			color="secondary"
 			v-model="searchWord"
 			@keyup.enter="search"
 		></v-text-field>
+
+		<v-btn text color="secondary" @click.stop="movePageTo('/fame')">
+			<v-icon left>mdi-trophy</v-icon>명예의 전당
+		</v-btn>
 
 		<v-btn text @click.stop="logout" v-if="isLogin" color="secondary">
 			<v-icon left>mdi-logout</v-icon>로그아웃</v-btn
