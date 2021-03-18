@@ -51,6 +51,12 @@ const router = new Router({
 		},
 
 		{
+			path: '/profile',
+			name: 'profile',
+			component: () => import('@/views/profile.vue'),
+		},
+
+		{
 			path: '/*',
 			name: 'error_page',
 			component: () => import('@/views/error_page.vue'),

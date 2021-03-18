@@ -88,7 +88,7 @@
 								<v-divider class="mx-4"></v-divider>
 
 								<v-card-text>
-									<form @submit.prevent="uploadComment(item)">
+									<form @submit.prevent="uploadCommentAndRetriveComments(item)">
 										<v-row>
 											<v-col cols="12">
 												<v-textarea
@@ -160,10 +160,39 @@
 					<!-- <v-row no-gutters class="top-row"> -->
 					<v-row no-gutters class="top-row flex-grow-1 flex-shrink-1">
 						<v-col cols="8" class="grid-item-blue fill-parent-height">
-							<v-img
-								:src="item.thumbnail"
-								style="width:100%; height:100%; "
-							></v-img>
+							<div class="image">
+								<div class="overlay">
+									<span
+										class="material-icons tryToUnlike"
+										style="color: #DC143C; font-size:70px"
+										@click.stop="unlikeMeme(item.postId, item.likes)"
+										v-if="isLogin && currentLikeMemes.includes(item.postId)"
+									>
+										favorite
+									</span>
+									<span
+										class="material-icons tryToLike"
+										style="font-size:70px"
+										@click.stop="likeMeme(item.postId, item.likes)"
+										v-else
+									>
+										favorite_border
+									</span>
+									<span
+										class="material-icons tryToLike"
+										style="font-size:70px"
+										@click.stop="
+											checkUserAuthAndUpdateDialog(
+												item.postId + '_comment',
+												'open',
+											)
+										"
+									>
+										comment
+									</span>
+								</div>
+								<v-img :src="item.thumbnail" class="center-fit"></v-img>
+							</div>
 						</v-col>
 						<v-col cols="4" class="grid-item-green fill-parent-height">
 							<div v-if="isLoading">
@@ -171,6 +200,9 @@
 									indeterminate
 									color="primary"
 								></v-progress-circular>
+							</div>
+							<div v-if="!isLoading && !currentPostComments.length">
+								<v-img src="@/assets/doge.jpg" contain></v-img>
 							</div>
 							<v-card
 								class="mx-auto"
@@ -311,6 +343,10 @@ export default {
 			this.currentPostComments = currentComments;
 			this.isLoading = false;
 		},
+		async uploadCommentAndRetriveComments(postInfo) {
+			await this.uploadComment(postInfo);
+			await this.retrievecomments(postInfo.postId);
+		},
 	},
 };
 </script>
@@ -344,5 +380,21 @@ export default {
 
 .top-row {
 	min-height: 0;
+}
+
+.image {
+	position: relative;
+}
+
+.overlay {
+	position: absolute;
+	right: 0;
+	z-index: 5;
+}
+
+.center-fit {
+	max-width: 100%;
+	max-height: 93.3vh;
+	margin: auto;
 }
 </style>

@@ -15,6 +15,11 @@
 					@unlikeMeme="unlikeMeme"
 				></card_with_dialog>
 			</v-col>
+			<v-col cols="12" class="mt-5 text center">
+				<p v-if="!isLoading && !this.memes.length">
+					사진이 없습니다. 너무 허전해요...
+				</p>
+			</v-col>
 		</v-row>
 		<v-progress-linear
 			v-if="isLoading"
