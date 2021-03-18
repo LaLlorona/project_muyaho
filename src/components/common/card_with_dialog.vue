@@ -172,7 +172,7 @@
 									</span>
 									<span
 										class="material-icons tryToLike"
-										style="font-size:70px"
+										style="font-size:70px;color: grey"
 										@click.stop="likeMeme(item.postId, item.likes)"
 										v-else
 									>
@@ -180,7 +180,7 @@
 									</span>
 									<span
 										class="material-icons tryToLike"
-										style="font-size:70px"
+										style="font-size:70px;color:grey"
 										@click.stop="
 											checkUserAuthAndUpdateDialog(
 												item.postId + '_comment',
@@ -358,7 +358,7 @@ export default {
 }
 .tryToLike:hover {
 	cursor: pointer;
-	color: #dc143c;
+	color: #dc143c !important;
 }
 
 .grid-item-green {
