@@ -25,6 +25,8 @@
 			@keyup.enter="search"
 		></v-text-field>
 
+		<v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
 		<v-btn text color="secondary" @click.stop="movePageTo('/fame')">
 			<v-icon left>mdi-trophy</v-icon>명예의 전당
 		</v-btn>
@@ -62,6 +64,7 @@ export default {
 				'X3LM926NK1',
 				'9435c0f6dfcce9c3bec66562a2646d06',
 			),
+			drawer: false,
 		};
 	},
 	computed: {

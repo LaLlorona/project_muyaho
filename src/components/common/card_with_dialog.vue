@@ -151,50 +151,156 @@
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 			</v-toolbar>
-			<v-main style="height:93.3vh" class="py-0">
-				<v-container
-					fluid
-					pa-0
-					class="d-flex flex-column flex-grow-1 fill-parent-height"
-				>
-					<!-- <v-row no-gutters class="top-row"> -->
-					<v-row no-gutters class="top-row flex-grow-1 flex-shrink-1">
-						<v-col cols="8" class="grid-item-blue fill-parent-height">
-							<div class="image">
-								<div class="overlay">
-									<span
-										class="material-icons tryToUnlike"
-										style="color: #DC143C; font-size:70px"
-										@click.stop="unlikeMeme(item.postId, item.likes)"
-										v-if="isLogin && currentLikeMemes.includes(item.postId)"
-									>
-										favorite
-									</span>
-									<span
-										class="material-icons tryToLike"
-										style="font-size:70px;color: grey"
-										@click.stop="likeMeme(item.postId, item.likes)"
-										v-else
-									>
-										favorite_border
-									</span>
-									<span
-										class="material-icons tryToLike"
-										style="font-size:70px;color:grey"
-										@click.stop="
-											checkUserAuthAndUpdateDialog(
-												item.postId + '_comment',
-												'open',
-											)
-										"
-									>
-										comment
-									</span>
+			<span v-if="$vuetify.breakpoint.smAndUp">
+				<v-main style="height:93.3vh" class="py-0">
+					<v-container
+						fluid
+						pa-0
+						class="d-flex flex-column flex-grow-1 fill-parent-height"
+					>
+						<!-- <v-row no-gutters class="top-row"> -->
+						<v-row no-gutters class="top-row flex-grow-1 flex-shrink-1">
+							<v-col cols="8" class="grid-item-blue fill-parent-height">
+								<div class="image">
+									<div class="overlay">
+										<span
+											class="material-icons tryToUnlike"
+											style="color: #DC143C; font-size:45px"
+											@click.stop="unlikeMeme(item.postId, item.likes)"
+											v-if="isLogin && currentLikeMemes.includes(item.postId)"
+										>
+											favorite
+										</span>
+										<span
+											class="material-icons tryToLike"
+											style="font-size:45px;color: grey"
+											@click.stop="likeMeme(item.postId, item.likes)"
+											v-else
+										>
+											favorite_border
+										</span>
+										<span
+											class="material-icons tryToLike"
+											style="font-size:45px;color:grey"
+											@click.stop="
+												checkUserAuthAndUpdateDialog(
+													item.postId + '_comment',
+													'open',
+												)
+											"
+										>
+											comment
+										</span>
+									</div>
+									<v-img :src="item.thumbnail" class="center-fit"></v-img>
 								</div>
-								<v-img :src="item.thumbnail" class="center-fit"></v-img>
-							</div>
-						</v-col>
-						<v-col cols="4" class="grid-item-green fill-parent-height">
+							</v-col>
+							<v-col cols="4" class="grid-item-green fill-parent-height">
+								<div v-if="isLoading">
+									<v-progress-circular
+										indeterminate
+										color="primary"
+									></v-progress-circular>
+								</div>
+								<div v-if="!isLoading && !currentPostComments.length">
+									<v-img src="@/assets/doge.jpg" contain></v-img>
+								</div>
+								<v-card
+									class="mx-auto"
+									color="third"
+									v-else
+									v-for="comment in currentPostComments"
+									:key="comment.id"
+								>
+									<v-card-title>
+										<v-list-item class="grow">
+											<v-list-item-avatar color="grey darken-3">
+												<v-img
+													class="elevation-6"
+													alt=""
+													src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+												></v-img>
+											</v-list-item-avatar>
+											<v-list-item-content>
+												<v-list-item-title class="subtitle-1">{{
+													comment.userName
+												}}</v-list-item-title>
+											</v-list-item-content>
+											<v-row align="center" justify="end">
+												<span class="subtitle-2">{{
+													comment.createOn | formatDate
+												}}</span>
+											</v-row>
+										</v-list-item>
+									</v-card-title>
+
+									<v-card-text class="body-1 font-weight-bold">
+										{{ comment.content }}
+									</v-card-text>
+
+									<v-card-actions>
+										<span
+											class="material-icons tryToUnlike"
+											style="color: #DC143C"
+											@click.stop="unlikeComment(comment.id, comment.likes)"
+											v-if="isLogin && currentLikeComments.includes(comment.id)"
+										>
+											thumb_up
+										</span>
+										<span
+											class="material-icons tryToLike"
+											@click.stop="likeComment(comment.id, comment.likes)"
+											v-else
+										>
+											thumb_up_off_alt
+										</span>
+										<span class="subheading mr-2">{{
+											comment.likes
+										}}</span></v-card-actions
+									>
+								</v-card>
+							</v-col>
+						</v-row>
+						<!-- <v-row no-gutters class="bottom-row"> -->
+					</v-container>
+				</v-main>
+			</span>
+			<!-- when mobile page -->
+			<span v-else>
+				<v-main class="py-0">
+					<v-container fluid>
+						<!-- <v-row no-gutters class="top-row"> -->
+
+						<div class="overlay">
+							<span
+								class="material-icons tryToUnlike"
+								style="color: #DC143C; font-size:45px"
+								@click.stop="unlikeMeme(item.postId, item.likes)"
+								v-if="isLogin && currentLikeMemes.includes(item.postId)"
+							>
+								favorite
+							</span>
+							<span
+								class="material-icons tryToLike"
+								style="font-size:45px;color: grey"
+								@click.stop="likeMeme(item.postId, item.likes)"
+								v-else
+							>
+								favorite_border
+							</span>
+							<span
+								class="material-icons tryToLike"
+								style="font-size:45px;color:grey"
+								@click.stop="
+									checkUserAuthAndUpdateDialog(item.postId + '_comment', 'open')
+								"
+							>
+								comment
+							</span>
+						</div>
+						<v-img :src="item.thumbnail" class="center-fit-mobile"></v-img>
+
+						<div class="scrollable">
 							<div v-if="isLoading">
 								<v-progress-circular
 									indeterminate
@@ -237,13 +343,31 @@
 									{{ comment.content }}
 								</v-card-text>
 
-								<v-card-actions> </v-card-actions>
+								<v-card-actions>
+									<span
+										class="material-icons tryToUnlike"
+										style="color: #DC143C"
+										@click.stop="unlikeComment(comment.id, comment.likes)"
+										v-if="isLogin && currentLikeComments.includes(comment.id)"
+									>
+										thumb_up
+									</span>
+									<span
+										class="material-icons tryToLike"
+										@click.stop="likeComment(comment.id, comment.likes)"
+										v-else
+									>
+										thumb_up_off_alt
+									</span>
+									<span class="subheading mr-2">{{
+										comment.likes
+									}}</span></v-card-actions
+								>
 							</v-card>
-						</v-col>
-					</v-row>
-					<!-- <v-row no-gutters class="bottom-row"> -->
-				</v-container>
-			</v-main>
+						</div>
+					</v-container>
+				</v-main>
+			</span>
 		</v-card>
 	</v-dialog>
 </template>
@@ -253,6 +377,7 @@ import Mixin from '@/mixins/Mixin.js';
 import {
 	commentsCollection,
 	postsCollection,
+	usersCollection,
 	auth,
 } from '@/datasources/firebase.js';
 import router from '@/routes/index.js';
@@ -271,6 +396,9 @@ export default {
 	computed: {
 		currentLikeMemes() {
 			return this.$store.state.userProfile.likedMemes;
+		},
+		currentLikeComments() {
+			return this.$store.state.userProfile.likedComments;
 		},
 		getErrorMessage() {
 			return 'asdf';
@@ -314,6 +442,7 @@ export default {
 					postId: postInfo.postId,
 					userId: auth.currentUser.uid,
 					userName: this.$store.state.userProfile.name,
+					likes: 0,
 				});
 
 				await postsCollection.doc(postInfo.postId).update({
@@ -346,6 +475,55 @@ export default {
 		async uploadCommentAndRetriveComments(postInfo) {
 			await this.uploadComment(postInfo);
 			await this.retrievecomments(postInfo.postId);
+		},
+		async likeComment(commentId, commentLikes) {
+			if (!auth.currentUser) {
+				router.push('/login');
+				return;
+			}
+			try {
+				const userId = auth.currentUser.uid;
+				await commentsCollection.doc(commentId).update({
+					likes: commentLikes + 1,
+				});
+				let toUpdate = this.$store.state.userProfile.likedComments;
+				toUpdate.push(commentId);
+				await usersCollection.doc(userId).update({
+					likedComments: toUpdate,
+				});
+				for (let i = 0; i < this.currentPostComments.length; i++) {
+					if (this.currentPostComments[i].id == commentId) {
+						this.currentPostComments[i].likes++;
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		},
+
+		async unlikeComment(commentId, commentLikes) {
+			try {
+				const userId = auth.currentUser.uid;
+				await commentsCollection.doc(commentId).update({
+					likes: commentLikes - 1,
+				});
+				let toUpdate = this.$store.state.userProfile.likedComments;
+				let index = toUpdate.indexOf(commentId);
+				if (index > -1) {
+					toUpdate.splice(index, 1);
+					await usersCollection.doc(userId).update({
+						likedComments: toUpdate,
+					});
+				}
+
+				for (let i = 0; i < this.currentPostComments.length; i++) {
+					if (this.currentPostComments[i].id == commentId) {
+						this.currentPostComments[i].likes--;
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
 		},
 	},
 };
@@ -392,9 +570,20 @@ export default {
 	z-index: 5;
 }
 
+.center-fit-mobile {
+	max-width: 100%;
+	max-height: 27vh;
+	margin: auto;
+}
+
 .center-fit {
 	max-width: 100%;
 	max-height: 93.3vh;
 	margin: auto;
+}
+
+.scrollable {
+	overflow-y: scroll;
+	max-height: 60vh;
 }
 </style>

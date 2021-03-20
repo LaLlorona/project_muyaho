@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import App from './App.vue';
-import './registerServiceWorker';
+// import './registerServiceWorker_notusing';
 import router from './routes/index.js';
 import store from './store/index.js';
 import vuetify from './plugins/vuetify';
