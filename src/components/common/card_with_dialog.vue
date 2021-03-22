@@ -106,7 +106,7 @@
 													required
 												></v-textarea>
 											</v-col>
-											<v-col cols="10"></v-col>
+											<v-col cols="8"></v-col>
 											<v-col cols="2">
 												<v-btn
 													type="submit"

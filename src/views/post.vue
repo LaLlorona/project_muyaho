@@ -1,69 +1,84 @@
 <template>
 	<v-container>
 		<v-row>
-			<v-col cols="2"></v-col>
-			<v-col cols="8"><h1>Post your meme</h1></v-col>
-			<v-col cols="2"></v-col>
-		</v-row>
-		<v-row>
-			<v-col cols="3">
-				<!-- <v-img src="../assets/rainbow_parrot.gif" max-width="300"></v-img> -->
-			</v-col>
-			<v-col cols="6">
-				<form @submit.prevent="fnDoPost">
-					<input type="file" @change="previewImage" accept="image/*" required />
-					<v-text-field
-						name="name"
-						label="name"
-						type="text"
-						v-model="name"
-						:rules="[
-							v => (v || '').length < 100 || `제목은 100자 미만이어야 합니다.`,
-						]"
-						maxLength="100"
-						required
-					></v-text-field>
+			<v-col offset-md="3" md="6" offset="1" cols="10">
+				<v-card class="mx-4 my-12">
+					<form @submit.prevent="fnDoPost">
+						<v-img
+							class="percent-size"
+							src="../assets/placeholder.png"
+							v-if="imageUrl == ''"
+						></v-img>
+						<v-img class="percent-size" :src="imageUrl" v-else></v-img>
 
-					<v-textarea
-						name="explanation"
-						label="explanation"
-						type="test"
-						v-model="explanation"
-						:rules="[
-							v => (v || '').length < 300 || '설명은 300자 미만이어야 합니다.',
-						]"
-						maxlength="300"
-						required
-					></v-textarea>
-					<v-select
-						v-model="year"
-						:items="allYears"
-						:rules="[v => !!v || '연도를 선택해주세요.']"
-						item-text="state"
-						item-value="abbr"
-						label="밈 등장 시기"
-						persistent-hint
-						return-object
-						single-line
-					>
-					</v-select>
-					<v-alert type="error" dismissible v-model="alert">{{
-						errorMessage
-					}}</v-alert>
+						<v-card-text>
+							<input
+								type="file"
+								@change="previewImage"
+								accept="image/*"
+								required
+							/>
+						</v-card-text>
 
-					<v-btn type="submit" color="orange" dark>post</v-btn>
+						<v-card-title>
+							<v-text-field
+								name="name"
+								label="name"
+								type="text"
+								v-model="name"
+								:rules="[
+									v =>
+										(v || '').length < 100 || `제목은 100자 미만이어야 합니다.`,
+								]"
+								maxLength="100"
+								required
+							></v-text-field>
+						</v-card-title>
 
-					<p v-if="isLoading">
-						Progress: {{ uploadValue.toFixed() + '%' }}
-						<progress id="progress" :value="uploadValue" max="100"></progress>
-					</p>
-				</form>
-			</v-col>
-			<v-col cols="3">
-				<!-- <v-img
-					src="../assets/rainbow_parrot_sunglasses.gif"
-					max-width="300"
-				></v-img> -->
+						<v-card-text>
+							<v-textarea
+								name="explanation"
+								label="explanation"
+								type="test"
+								v-model="explanation"
+								:rules="[
+									v =>
+										(v || '').length < 300 || '설명은 300자 미만이어야 합니다.',
+								]"
+								maxlength="300"
+								required
+							></v-textarea>
+							<v-select
+								v-model="year"
+								:items="allYears"
+								:rules="[v => !!v || '연도를 선택해주세요.']"
+								item-text="state"
+								item-value="abbr"
+								label="밈 등장 시기"
+								persistent-hint
+								return-object
+								single-line
+							>
+							</v-select>
+							<v-alert type="error" dismissible v-model="alert">{{
+								errorMessage
+							}}</v-alert>
+
+							<p v-if="isLoading">
+								Progress: {{ uploadValue.toFixed() + '%' }}
+								<progress
+									id="progress"
+									:value="uploadValue"
+									max="100"
+								></progress>
+							</p>
+						</v-card-text>
+
+						<v-card-title>
+							<v-btn type="submit" color="orange" dark>post</v-btn>
+						</v-card-title>
+					</form>
+				</v-card>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -80,6 +95,7 @@ export default {
 			test: 300,
 			explanation: '',
 			image: null,
+			imageUrl: '',
 			year: 0,
 			errorMessage: '',
 			alert: false,
@@ -102,6 +118,7 @@ export default {
 		previewImage(event) {
 			console.log(event);
 			this.image = event.target.files[0];
+			this.imageUrl = URL.createObjectURL(this.image);
 		},
 		assertInput() {
 			if (this.year == 0) {
@@ -151,4 +168,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.percent-size {
+	max-width: 100%;
+	max-height: 35vh;
+	margin: auto;
+}
+</style>

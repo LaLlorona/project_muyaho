@@ -46,6 +46,15 @@
 						<v-icon left>mdi-file-document-edit-outline</v-icon>포스트
 					</v-btn>
 				</v-list-item>
+				<v-list-item>
+					<v-btn
+						text
+						@click.stop="movePageTo('/explanation')"
+						color="secondary"
+					>
+						<v-icon left>mdi-help-circle-outline</v-icon>소개
+					</v-btn>
+				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
 		<v-app-bar app color="primary" dark>
@@ -93,6 +102,15 @@
 				class="hidden-sm-and-down"
 			>
 				<v-icon left>mdi-file-document-edit-outline</v-icon>포스트
+			</v-btn>
+
+			<v-btn
+				text
+				@click.stop="movePageTo('/explanation')"
+				color="secondary"
+				class="hidden-sm-and-down"
+			>
+				<v-icon left>mdi-help-circle-outline</v-icon>소개
 			</v-btn>
 
 			<v-btn

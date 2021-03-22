@@ -1,5 +1,17 @@
 <template>
 	<v-container>
+		<div class="main-font main-size text-center">무야호~</div>
+
+		<div class="sub-size sub-font text-center">
+			우리는 역사의 중간 세대이다. 지구를 탐험하기에는 너무 늦게 태어났고,
+			우주를 탐험하기에는 너무 일찍 태어났다.
+		</div>
+
+		<v-divider class="my-3"></v-divider>
+
+		<div class="mid-size text-center mid-font">
+			하지만 끝내주는 밈들을 탐색하기에는 알맞은 때에 태어났다.
+		</div>
 		<v-row>
 			<v-col
 				cols="12"
@@ -130,4 +142,36 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Kirang+Haerang&display=swap');
+.main-font {
+	font-family: 'Kirang Haerang', cursive;
+}
+.mid-font {
+	font-family: 'Do Hyeon', sans-serif;
+}
+
+.sub-font {
+	font-family: 'Nanum Gothic', sans-serif;
+}
+.main-size {
+	font-size: 6rem;
+	font-weight: 300;
+	line-height: 6rem;
+	letter-spacing: -0.015625em;
+}
+
+.sub-size {
+	font-size: 1.25rem;
+	font-weight: normal;
+	letter-spacing: 0.009375em;
+	line-height: 1.5rem;
+}
+
+.mid-size {
+	font-size: 2rem;
+	font-weight: normal;
+	letter-spacing: 0.009375em;
+	line-height: 2.25rem;
+}
+</style>

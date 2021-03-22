@@ -55,6 +55,11 @@ const router = new Router({
 			name: 'profile',
 			component: () => import('@/views/profile.vue'),
 		},
+		{
+			path: '/explanation',
+			name: 'explanation',
+			component: () => import('@/views/explanation.vue'),
+		},
 
 		{
 			path: '/*',

@@ -1,5 +1,9 @@
 <template>
 	<v-container>
+		<div class="main-font main-size text-center">
+			{{ this.year }}년 최고의 밈
+		</div>
+
 		<v-select
 			v-model="year"
 			:items="allYears"
@@ -36,6 +40,9 @@
 			rounded
 			height="6"
 		></v-progress-linear>
+		<p v-if="!isLoading && !this.memes.length">
+			사진이 없습니다. 너무 허전해요...
+		</p>
 	</v-container>
 </template>
 
@@ -140,4 +147,15 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.main-font {
+	font-family: 'Kirang Haerang', cursive;
+}
+
+.main-size {
+	font-size: 6rem;
+	font-weight: 300;
+	line-height: 6rem;
+	letter-spacing: -0.015625em;
+}
+</style>
